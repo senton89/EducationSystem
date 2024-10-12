@@ -1,0 +1,19 @@
+﻿<Window x:Class="EducationSystem.Authorization"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:EducationSystem"
+        mc:Ignorable="d"
+        Title="Authorization" Height="350" Width="500" Background="#F5F5DC">
+    <Grid>
+        <Label Content="АВТОРИЗАЦИЯ" VerticalAlignment="Top" Padding="90,0,0,0" FontSize="25" Margin="70,10,0,0" FontWeight="Bold" Foreground="#9B9A5A"></Label>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="400">
+            <Label Content="Логин:" VerticalAlignment="Center" Margin="70,10,0,0" FontWeight="Bold" Foreground="#9B9A5A"/>
+            <TextBox Name="LoginTextBox" Width="250" Margin="0,0,0,10" Padding="5" Background="#F5F5DC" BorderBrush="#9B9A5A" BorderThickness="2"/>
+            <Label Content="Пароль:" VerticalAlignment="Center" Margin="70,10,0,0" FontWeight="Bold" Foreground="#9B9A5A"/>
+            <PasswordBox Name="PasswordBox" Width="250" Margin="0,0,0,20" Padding="5" Background="#F5F5DC" BorderBrush="#9B9A5A" BorderThickness="2"/>
+            <Button Content="Войти" Width="100" Margin="0,30,150,0" Click="LoginButton_Click" Background="#9B9A5A" Foreground="White" FontWeight="Bold"/>
+            </StackPanel>
+    </Grid>
+</Window>
