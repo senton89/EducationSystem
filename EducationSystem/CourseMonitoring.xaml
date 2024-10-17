@@ -1,0 +1,52 @@
+﻿<Window x:Class="EducationSystem.CourseMonitoring"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:EducationSystem"
+        mc:Ignorable="d"
+        Title="Управление учебными программами" Height="450" Width="800">
+
+        <Grid>
+
+            <Grid.RowDefinitions>
+
+                <RowDefinition Height="Auto" />
+
+                <RowDefinition Height="*" />
+
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" Margin="10">
+
+                <Button Content="Создать программу" Click="CreateCourse" />
+
+                <Button Content="Редактировать" Click="EditCourse" Margin="10,0,0,0" />
+
+                <Button Content="Удалить" Click="DeleteCourse" Margin="10,0,0,0" />
+
+            </StackPanel>
+
+            <DataGrid x:Name="CoursesGrid" Grid.Row="1" AutoGenerateColumns="False" SelectedItem="{Binding SelectedCourse}">
+
+                <DataGrid.Columns>
+
+                    <DataGridTextColumn Header="Название" Binding="{Binding Title}" />
+
+                    <DataGridTextColumn Header="Описание" Binding="{Binding Description}" />
+
+                    <DataGridTextColumn Header="Длительность" Binding="{Binding Duration}" />
+
+                    <DataGridTextColumn Header="Ответственный" Binding="{Binding InstructorId}" />
+
+                    <DataGridTextColumn Header="Создано" Binding="{Binding CreatedAt}" />
+
+                    <DataGridTextColumn Header="Обновлено" Binding="{Binding UpdatedAt}" />
+
+                </DataGrid.Columns>
+
+            </DataGrid>
+
+        </Grid>
+
+    </Window>

@@ -11,9 +11,6 @@ using System.Windows.Shapes;
 
 namespace EducationSystem;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
 public partial class MainWindow : Window
 {
     public MainWindow()
@@ -33,5 +30,12 @@ public partial class MainWindow : Window
     {
         Registration registration = new Registration();
         registration.Show();
+    }
+
+    private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+    {
+        CourseMonitoring courseMonitoring = new CourseMonitoring();
+        courseMonitoring.Show();
+        Close();
     }
 }

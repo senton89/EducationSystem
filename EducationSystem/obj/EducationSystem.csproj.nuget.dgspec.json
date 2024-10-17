@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\sento\\RiderProjects\\EducationSystem\\EducationSystem\\EducationSystem.csproj": {}
+    "C:\\Users\\Rodion\\RiderProjects\\EducationSystem\\EducationSystem\\EducationSystem.csproj": {}
   },
   "projects": {
-    "C:\\Users\\sento\\RiderProjects\\EducationSystem\\EducationSystem\\EducationSystem.csproj": {
+    "C:\\Users\\Rodion\\RiderProjects\\EducationSystem\\EducationSystem\\EducationSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\sento\\RiderProjects\\EducationSystem\\EducationSystem\\EducationSystem.csproj",
+        "projectUniqueName": "C:\\Users\\Rodion\\RiderProjects\\EducationSystem\\EducationSystem\\EducationSystem.csproj",
         "projectName": "EducationSystem",
-        "projectPath": "C:\\Users\\sento\\RiderProjects\\EducationSystem\\EducationSystem\\EducationSystem.csproj",
-        "packagesPath": "C:\\Users\\sento\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\sento\\RiderProjects\\EducationSystem\\EducationSystem\\obj\\",
+        "projectPath": "C:\\Users\\Rodion\\RiderProjects\\EducationSystem\\EducationSystem\\EducationSystem.csproj",
+        "packagesPath": "C:\\Users\\Rodion\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Rodion\\RiderProjects\\EducationSystem\\EducationSystem\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\sento\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Rodion\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,7 +26,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -39,6 +38,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -73,7 +77,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.102/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
