@@ -1,11 +1,11 @@
-﻿<Window x:Class="EducationSystem.CreateCourseWindow"
+﻿<Window x:Class="EducationSystem.ManageCourseWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:EducationSystem"
         mc:Ignorable="d"
-        Title="Управление курсом" Height="250" Width="800">
+        Title="Управление курсом" Height="300" Width="800">
 
     <Grid>
 

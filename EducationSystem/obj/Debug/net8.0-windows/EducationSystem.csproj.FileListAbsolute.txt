@@ -78,5 +78,5 @@ C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-w
 C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\EducationSystem.pdb
 C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\EducationSystem.genruntimeconfig.cache
 C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\ref\EducationSystem.dll
-C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\CreateCourseWindow.g.cs
-C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\CreateCourseWindow.baml
+C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\ManageCourseWindow.g.cs
+C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\ManageCourseWindow.baml

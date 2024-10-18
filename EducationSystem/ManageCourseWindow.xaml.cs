@@ -5,17 +5,19 @@ using System.Windows.Input;
 
 namespace EducationSystem;
 
-public partial class CreateCourseWindow : Window
+public partial class ManageCourseWindow : Window
 {
     private readonly CourseModel _course;
     public ObservableCollection<UserModel> Instructors { get; set; }
     public CourseModel Course => _course;
     
-    public CreateCourseWindow(CourseModel course)
+    public ManageCourseWindow(CourseModel course)
     {
         InitializeComponent();
         _course = course;
+        
         DataContext = this;
+        
         // Инициализация других данных для привязки (например, список преподавателей)
         LoadInstructors();
         
@@ -25,7 +27,7 @@ public partial class CreateCourseWindow : Window
             Email = instructor.Email,
             Department = instructor.Department
         }).ToList();
-        
+            
         InstructorsList.ItemsSource = instructorsInfo;
     }
     
@@ -41,9 +43,10 @@ private void LoadInstructors()
         // Сохранение курса в базе данных
         string title = Course.Title;
         int duration = Course.Duration;
-        Course.CreatedAt = DateTime.Now;
-        Course.UpdatesAt = DateTime.Now;
-        Course.InstructorId = Instructors[InstructorsList.SelectedIndex].UserID;
+        Course.CreatedAt = Course.CreatedAt == DateTime.MinValue?
+            DateTime.Now : Course.CreatedAt;
+        Course.UpdatedAt = DateTime.Now;
+        Course.InstructorId = Instructors[InstructorsList.SelectedIndex>=0?InstructorsList.SelectedIndex:0].UserID;
         
         if (ValidateCourse(title,duration))
         {

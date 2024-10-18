@@ -24,10 +24,12 @@
                 <Button Content="Редактировать" Click="EditCourse" Margin="10,0,0,0" />
 
                 <Button Content="Удалить" Click="DeleteCourse" Margin="10,0,0,0" />
+                
+                <Button Content="Обновить" Click="RefreshCourse" Margin="10,0,0,0" />
 
             </StackPanel>
 
-            <DataGrid x:Name="CoursesGrid" Grid.Row="1" AutoGenerateColumns="False" SelectedItem="{Binding SelectedCourse}">
+            <DataGrid x:Name="CoursesGrid" IsReadOnly="True" Grid.Row="1" AutoGenerateColumns="False" SelectedItem="{Binding SelectedCourse}">
 
                 <DataGrid.Columns>
 

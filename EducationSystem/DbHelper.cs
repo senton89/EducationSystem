@@ -184,10 +184,11 @@ namespace EducationSystem
         public static void SaveCourse(CourseModel course)
         {
             using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
-
             {
                 // Define the SQL command to insert or update the course
-                string query = "INSERT INTO courses (title, description, duration, instructor_id) VALUES (@Title, @Description, @Duration, @InstructorId)"; // Insert case
+                string query = course.CourseId == 0 
+                    ? "INSERT INTO courses (title, description, duration, instructor_id) VALUES (@Title, @Description, @Duration, @InstructorId)": // Insert case
+                    "UPDATE courses SET title = @Title, description = @Description, duration = @Duration, instructor_id = @InstructorId, updated_at = CURRENT_TIMESTAMP WHERE course_id = @CourseId"; // Update case
                 using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
                 {
                     // Add parameters to prevent SQL injection
@@ -195,6 +196,11 @@ namespace EducationSystem
                     command.Parameters.AddWithValue("@Description", course.Description); // Handle null description
                     command.Parameters.AddWithValue("@Duration", course.Duration);
                     command.Parameters.AddWithValue("@InstructorId", course.InstructorId);
+                    
+                    if (course.CourseId != 0)
+                    {
+                        command.Parameters.AddWithValue("@CourseId", course.CourseId);
+                    }
                     
                     connection.Open();
                     command.ExecuteNonQuery();
@@ -206,9 +212,59 @@ namespace EducationSystem
         }
         public static List<CourseModel> GetCourses()
         {
-            return new List<CourseModel>();
-        }
+            List<CourseModel> courses = new List<CourseModel>();
+
+            using (var connection = new NpgsqlConnection(connectionString))
+
+            {
+
+                connection.Open();
+
         
+
+                using (var command = new NpgsqlCommand("SELECT course_id, title, description, duration, created_at, updated_at, instructor_id FROM courses", connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            courses.Add(new CourseModel
+                            {
+                                CourseId = reader.GetInt32(0),
+                                Title = reader.GetString(1),
+                                Description = reader.IsDBNull(2) ? null : reader.GetString(2),
+                                Duration = reader.GetInt32(3),
+                                CreatedAt = reader.GetDateTime(4),
+                                UpdatedAt = reader.GetDateTime(5),
+                                InstructorId = reader.GetInt32(6)
+                            });
+                        }
+                    }
+                }
+            }
+            return courses;
+        }
+
+        public static void DeleteCourse(int courseId)
+        {
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+                using (var command = new NpgsqlCommand("DELETE FROM courses WHERE course_id = @courseId", connection))
+                {
+                    command.Parameters.AddWithValue("courseId", courseId);
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show($"Курс с ID {courseId} успешно удален.");
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Курс с ID {courseId} не найден.");
+                    }
+                }
+            }
+        }
     }
 
 public class UserModel
@@ -237,12 +293,12 @@ public class UserModel
     }
     public class CourseModel
     {
-        public int course_id { get; set; }
+        public int CourseId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public int Duration { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdatesAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
         public int InstructorId { get; set; }
     }
 }
