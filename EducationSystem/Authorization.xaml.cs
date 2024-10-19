@@ -14,7 +14,7 @@ namespace EducationSystem
         {
             string username = LoginTextBox.Text;
             string password = PasswordBox.Password;
-            if (DbContext.AuthenticateUser(username, password, out string role))
+            if (DbHelper.AuthenticateUser(username, password, out string role))
             {
                 MessageBox.Show($"Авторизация успешна! Роль: {role}");
                 // Можно продолжать процесс аутентификации, перенаправление пользователя и т.п.

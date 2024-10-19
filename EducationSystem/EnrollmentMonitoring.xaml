@@ -1,0 +1,32 @@
+﻿<Window x:Class="EducationSystem.EnrollmentMonitoring"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:EducationSystem"
+        mc:Ignorable="d"
+        Title="Управление записями на курсы" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <Button Content="Создать запись" Click="CreateEnrollment" />
+            <Button Content="Редактировать" Click="EditEnrollment" Margin="10,0,0,0" />
+            <Button Content="Удалить" Click="DeleteEnrollment" Margin="10,0,0,0" />
+            <Button Content="Обновить" Click="RefreshEnrollments" Margin="10,0,0,0" />
+            <Button Content="В главное меню" Click="ReturnToMain" Margin="300,0,0,0" HorizontalAlignment="Right" />
+        </StackPanel>
+        <DataGrid x:Name="EnrollmentsGrid" IsReadOnly="True" Grid.Row="1" AutoGenerateColumns="False" SelectedItem="{Binding SelectedEnrollment}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Запись" Binding="{Binding EnrollmentID}" />
+                <DataGridTextColumn Header="Пользователь" Binding="{Binding UserID}" />
+                <DataGridTextColumn Header="Курс" Binding="{Binding CourseID}" />
+                <DataGridTextColumn Header="Дата записи" Binding="{Binding EnrollmentDate, StringFormat='{}{0:dd.MM.yyyy HH:mm:ss}'}" />
+                <DataGridTextColumn Header="Дата завершения" Binding="{Binding CompletionDate, StringFormat='{}{0:dd.MM.yyyy HH:mm:ss}'}" />
+                <DataGridTextColumn Header="Оценка" Binding="{Binding Grade}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

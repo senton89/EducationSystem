@@ -20,15 +20,13 @@ public partial class Registration : Window
 
         string password = PasswordBox.Password;
 
-        string role = "Participant"; // Можно выбрать роль из выпадающего списка
+        string role = RoleComboBox.SelectionBoxItem.ToString();
 
         string phoneNumber = PhoneNumberTextBox.Text;
 
         string department = DepartmentTextBox.Text;
 
-        DbContext.AddNewUser(firstName, lastName, email, password, role, phoneNumber, department);
-
-        MessageBox.Show("Пользователь успешно добавлен!");
-
+        if(DbHelper.AddNewUser(firstName, lastName, email, password, role, phoneNumber, department)) 
+            Close();
     }
 }
