@@ -17,6 +17,7 @@ namespace EducationSystem
         {
             InitializeComponent();
             _enrollment = enrollment;
+            _enrollment.EnrollmentDate = DateTime.Now;
             DataContext = this;
             LoadUsers();
             LoadCourses();
@@ -27,15 +28,16 @@ namespace EducationSystem
         
         public static List<UserInfo> ConvertListToUsersInfo(List<UserModel> Users)
         {
-            var instructorsInfo = Users.Select(instructor => new UserInfo
+            var usersInfo = Users.Select(user => new UserInfo
             {
-                DisplayName = $"{instructor.FirstName} {instructor.LastName}",
-                Email = instructor.Email,
-                Department = instructor.Department
+                UserId = user.UserID,
+                DisplayName = $"{user.FirstName} {user.LastName}",
+                Email = user.Email,
+                Department = user.Department
             }).ToList();
-            return instructorsInfo;
+            return usersInfo;
         }
-
+        
         private void LoadUsers()
         {
             Users = DbHelper.GetUsers();
@@ -53,9 +55,11 @@ namespace EducationSystem
 
         private void SaveEnrollment(object sender, RoutedEventArgs e)
         {
+            _enrollment.UserID = (ParticipantsList.SelectedItem as UserInfo).UserId;
+            _enrollment.CourseID = (CoursesList.SelectedItem as CourseModel).CourseId;
             if (ValidateEnrollment())
             {
-                // DbHelper.SaveEnrollment(_enrollment);
+                DbHelper.SaveEnrollment(_enrollment);
                 MessageBox.Show("Enrollment saved successfully.");
                 Close();
             }
@@ -68,16 +72,16 @@ namespace EducationSystem
         private bool ValidateEnrollment()
         {
             // Validate user ID
-            if (Enrollment.UserID <= 0)
+            if (ParticipantsList.SelectedIndex<0)
             {
-                MessageBox.Show("User ID must be a positive number.");
+                MessageBox.Show("Please select at least one participant.");
                 return false;
             }
 
             // Validate course ID
-            if (Enrollment.CourseID <= 0)
+            if (CoursesList.SelectedIndex<0)
             {
-                MessageBox.Show("Course ID must be a positive number.");
+                MessageBox.Show("Please select at least one course.");
                 return false;
             }
 
@@ -95,10 +99,16 @@ namespace EducationSystem
                 return false;
             }
 
-            // Validate grade
-            if (Enrollment.Grade < 0 || Enrollment.Grade > 100)
+            if (!Enrollment.Grade.HasValue)
             {
-                MessageBox.Show("Grade must be between 0 and 100.");
+                MessageBox.Show("Grade is required.");
+                return false;
+            }
+
+            // Validate grade
+            if (Enrollment.Grade < 2 || Enrollment.Grade > 5)
+            {
+                MessageBox.Show("Grade must be between 2 and 5.");
                 return false;
             }
 

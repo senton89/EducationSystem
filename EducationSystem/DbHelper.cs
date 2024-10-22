@@ -172,6 +172,7 @@ namespace EducationSystem
         {
             return GetUsers().Where(u => u.Role == Roles.Instructor).ToList();
         }
+
         public static List<UserModel> GetParticipant()
         {
             return GetUsers().Where(u => u.Role == Roles.Participant).ToList();
@@ -215,11 +216,7 @@ namespace EducationSystem
             using (var connection = new NpgsqlConnection(connectionString))
 
             {
-
                 connection.Open();
-
-
-
                 using (var command =
                        new NpgsqlCommand(
                            "SELECT course_id, title, description, duration, created_at, updated_at, instructor_id FROM courses",
@@ -298,10 +295,11 @@ namespace EducationSystem
 
             return enrollments;
         }
+
         public static void DeleteEnrollment(int enrollmentId)
         {
-            string query = "DELETE FROM Enrollments WHERE EnrollmentID = @EnrollmentID";
-            
+            string query = "DELETE FROM enrollments WHERE enrollment_id = @EnrollmentID";
+
             using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
             {
                 using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
@@ -327,9 +325,36 @@ namespace EducationSystem
                 }
             }
         }
+
+        public static void SaveEnrollment(EnrollmentModel enrollment)
+        {
+            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+            {
+                // Define the SQL command to insert or update the course
+                string query = enrollment.EnrollmentID == 0
+                    ? "INSERT INTO enrollments (user_id, course_id, enrollment_date, completion_date, grade) VALUES (@UserID, @CourseID, @EnrollmentDate, @CompletionDate, @Grade)"
+                    : "UPDATE enrollments SET user_id = @UserID, course_id = @CourseID, enrollment_date = @EnrollmentDate, completion_date = @CompletionDate, grade = @Grade WHERE enrollment_id = @EnrollmentID"; // Update case
+                using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+                {
+                    // Add parameters to prevent SQL injection
+                    command.Parameters.AddWithValue("@UserID", enrollment.UserID);
+                    command.Parameters.AddWithValue("@CourseID", enrollment.CourseID);
+                    command.Parameters.AddWithValue("@EnrollmentDate", enrollment.EnrollmentDate);
+                    command.Parameters.AddWithValue("@CompletionDate",
+                        (object)enrollment.CompletionDate ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@Grade", (object)enrollment.Grade ?? DBNull.Value);
+                    if (enrollment.EnrollmentID != 0)
+                    {
+                        command.Parameters.AddWithValue("@EnrollmentID", enrollment.EnrollmentID);
+                    }
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
     }
 
-public class UserModel
+    public class UserModel
     {
         public int UserID { get; set; } // Уникальный идентификатор пользователя
         public string FirstName { get; set; } // Имя
@@ -364,6 +389,7 @@ public class UserModel
     }
     public class UserInfo
     {
+        public int UserId { get; set; }
         public string DisplayName { get; set; }
         public string Email { get; set; }
         public string Department { get; set; }
@@ -373,6 +399,18 @@ public class UserModel
     {
         public int EnrollmentID { get; set; }
         public int UserID { get; set; }
+        public int CourseID { get; set; }
+        public DateTime EnrollmentDate { get; set; }
+        public DateTime? CompletionDate { get; set; }
+        public decimal? Grade { get; set; }
+    }
+    
+    public class EnrollmentInfo
+    {
+        public int EnrollmentID { get; set; }
+        public string Participant { get; set; }
+        public int ParticipantID { get; set; }
+        public string Course { get; set; }
         public int CourseID { get; set; }
         public DateTime EnrollmentDate { get; set; }
         public DateTime? CompletionDate { get; set; }

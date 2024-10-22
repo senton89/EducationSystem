@@ -20,9 +20,8 @@
         </StackPanel>
         <DataGrid x:Name="EnrollmentsGrid" IsReadOnly="True" Grid.Row="1" AutoGenerateColumns="False" SelectedItem="{Binding SelectedEnrollment}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Запись" Binding="{Binding EnrollmentID}" />
-                <DataGridTextColumn Header="Пользователь" Binding="{Binding UserID}" />
-                <DataGridTextColumn Header="Курс" Binding="{Binding CourseID}" />
+                <DataGridTextColumn Header="Пользователь" Binding="{Binding Participant}" />
+                <DataGridTextColumn Header="Курс" Binding="{Binding Course}" />
                 <DataGridTextColumn Header="Дата записи" Binding="{Binding EnrollmentDate, StringFormat='{}{0:dd.MM.yyyy HH:mm:ss}'}" />
                 <DataGridTextColumn Header="Дата завершения" Binding="{Binding CompletionDate, StringFormat='{}{0:dd.MM.yyyy HH:mm:ss}'}" />
                 <DataGridTextColumn Header="Оценка" Binding="{Binding Grade}" />

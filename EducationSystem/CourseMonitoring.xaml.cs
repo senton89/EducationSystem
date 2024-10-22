@@ -8,7 +8,7 @@ public partial class CourseMonitoring : Window
 {
     private List<CourseModel> courses;
     private List<CourseInfo> coursesInfo = new();
-    public List<UserModel> Instructors { get; set; }
+    public List<UserModel> Instructors { get; }
     
     public CourseMonitoring()
     {

@@ -15,7 +15,6 @@ public partial class ManageCourseWindow : Window
     {
         InitializeComponent();
         _course = course;
-        
         DataContext = this;
         
         LoadInstructors();
