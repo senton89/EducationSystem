@@ -8,7 +8,9 @@ namespace EducationSystem
 {
     public class DbHelper
     {
-        private static string connectionString = "Host=localhost; Database=corporate_training; Username=postgres; Password=postgres;";
+        private static string connectionString =
+            "Host=localhost; Database=corporate_training; Username=postgres; Password=postgres;";
+
         public static bool AuthenticateUser(string username, string password, out string role)
         {
             role = string.Empty;
@@ -100,7 +102,7 @@ namespace EducationSystem
                         command.Parameters.AddWithValue("passwordHash", passwordHash);
 
                         var salt = hmac.Key;
-                        
+
                         command.Parameters.AddWithValue("salt", salt);
                     }
 
@@ -133,52 +135,46 @@ namespace EducationSystem
             }
         }
 
-        public static ObservableCollection<UserModel> GetInstructors()
+        public static List<UserModel> GetUsers()
         {
-            var instructors = new ObservableCollection<UserModel>();
-            
+            var users = new List<UserModel>();
 
             using (var connection = new NpgsqlConnection(connectionString))
-
             {
-
                 connection.Open();
-
-                string query = "SELECT user_id, first_name, last_name, email, phone_number, department FROM users WHERE role = 'Instructor'";
-
+                string query = "SELECT user_id, first_name, last_name, email,role, phone_number, department FROM users";
                 using (var command = new NpgsqlCommand(query, connection))
-
                 using (var reader = command.ExecuteReader())
-
                 {
-
                     while (reader.Read())
-
                     {
-
-                        var instructor = new UserModel
-
+                        Roles.TryParse(reader.GetString(4), out Roles role);
+                        var user = new UserModel
                         {
-
                             UserID = reader.GetInt32(0),
-
                             FirstName = reader.GetString(1),
-
                             LastName = reader.GetString(2),
-
                             Email = reader.GetString(3),
-
-                            PhoneNumber = reader.IsDBNull(4) ? null : reader.GetString(4),
-
-                            Department = reader.IsDBNull(5) ? null : reader.GetString(5)
-
+                            Role = role,
+                            PhoneNumber = reader.IsDBNull(5) ? null : reader.GetString(4),
+                            Department = reader.IsDBNull(6) ? null : reader.GetString(5)
                         };
 
-                        instructors.Add(instructor);
+                        users.Add(user);
                     }
                 }
             }
-            return instructors;
+
+            return users;
+        }
+
+        public static List<UserModel> GetInstructors()
+        {
+            return GetUsers().Where(u => u.Role == Roles.Instructor).ToList();
+        }
+        public static List<UserModel> GetParticipant()
+        {
+            return GetUsers().Where(u => u.Role == Roles.Participant).ToList();
         }
 
         public static void SaveCourse(CourseModel course)
@@ -186,8 +182,9 @@ namespace EducationSystem
             using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
             {
                 // Define the SQL command to insert or update the course
-                string query = course.CourseId == 0 
-                    ? "INSERT INTO courses (title, description, duration, instructor_id) VALUES (@Title, @Description, @Duration, @InstructorId)": // Insert case
+                string query = course.CourseId == 0
+                    ? "INSERT INTO courses (title, description, duration, instructor_id) VALUES (@Title, @Description, @Duration, @InstructorId)"
+                    : // Insert case
                     "UPDATE courses SET title = @Title, description = @Description, duration = @Duration, instructor_id = @InstructorId, updated_at = CURRENT_TIMESTAMP WHERE course_id = @CourseId"; // Update case
                 using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
                 {
@@ -196,12 +193,12 @@ namespace EducationSystem
                     command.Parameters.AddWithValue("@Description", course.Description); // Handle null description
                     command.Parameters.AddWithValue("@Duration", course.Duration);
                     command.Parameters.AddWithValue("@InstructorId", course.InstructorId);
-                    
+
                     if (course.CourseId != 0)
                     {
                         command.Parameters.AddWithValue("@CourseId", course.CourseId);
                     }
-                    
+
                     connection.Open();
                     command.ExecuteNonQuery();
 
@@ -210,6 +207,7 @@ namespace EducationSystem
             }
 
         }
+
         public static List<CourseModel> GetCourses()
         {
             List<CourseModel> courses = new List<CourseModel>();
@@ -220,9 +218,12 @@ namespace EducationSystem
 
                 connection.Open();
 
-        
 
-                using (var command = new NpgsqlCommand("SELECT course_id, title, description, duration, created_at, updated_at, instructor_id FROM courses", connection))
+
+                using (var command =
+                       new NpgsqlCommand(
+                           "SELECT course_id, title, description, duration, created_at, updated_at, instructor_id FROM courses",
+                           connection))
                 {
                     using (var reader = command.ExecuteReader())
                     {
@@ -242,6 +243,7 @@ namespace EducationSystem
                     }
                 }
             }
+
             return courses;
         }
 
@@ -256,11 +258,71 @@ namespace EducationSystem
                     int rowsAffected = command.ExecuteNonQuery();
                     if (rowsAffected > 0)
                     {
-                        MessageBox.Show($"Курс с ID {courseId} успешно удален.");
+                        MessageBox.Show($"Курс успешно удален.");
                     }
                     else
                     {
-                        MessageBox.Show($"Курс с ID {courseId} не найден.");
+                        MessageBox.Show($"Курс не найден.");
+                    }
+                }
+            }
+        }
+
+        public static List<EnrollmentModel> GetEnrollments()
+        {
+            List<EnrollmentModel> enrollments = new List<EnrollmentModel>();
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+                using (var command =
+                       new NpgsqlCommand(
+                           "SELECT enrollment_id, user_id, course_id, enrollment_date, completion_date, grade FROM Enrollments",
+                           connection))
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var enrollment = new EnrollmentModel
+                        {
+                            EnrollmentID = reader.GetInt32(0),
+                            UserID = reader.GetInt32(1),
+                            CourseID = reader.GetInt32(2),
+                            EnrollmentDate = reader.GetDateTime(3),
+                            CompletionDate = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
+                            Grade = reader.IsDBNull(5) ? (decimal?)null : reader.GetDecimal(5)
+                        };
+                        enrollments.Add(enrollment);
+                    }
+                }
+            }
+
+            return enrollments;
+        }
+        public static void DeleteEnrollment(int enrollmentId)
+        {
+            string query = "DELETE FROM Enrollments WHERE EnrollmentID = @EnrollmentID";
+            
+            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+            {
+                using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@EnrollmentID", enrollmentId);
+                    try
+                    {
+                        connection.Open();
+                        int rowsAffected = command.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show("Enrollment deleted successfully.");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Enrollment not found.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"An error occurred: {ex.Message}");
                     }
                 }
             }
@@ -269,27 +331,16 @@ namespace EducationSystem
 
 public class UserModel
     {
-
         public int UserID { get; set; } // Уникальный идентификатор пользователя
-
         public string FirstName { get; set; } // Имя
-
         public string LastName { get; set; } // Фамилия
-
         public string Email { get; set; } // Электронная почта
-
         public string PasswordHash { get; set; } // Хэш пароля
-
-        public string Role { get; set; } // Роль пользователя
-
+        public Roles Role { get; set; } // Роль пользователя
         public DateTime CreatedAt { get; set; } // Дата создания
-
         public DateTime UpdatedAt { get; set; } // Дата обновления
-
         public string PhoneNumber { get; set; } // Номер телефона
-
         public string Department { get; set; } // Отдел
-
     }
     public class CourseModel
     {
@@ -301,4 +352,31 @@ public class UserModel
         public DateTime UpdatedAt { get; set; }
         public int InstructorId { get; set; }
     }
+    public class CourseInfo
+    {
+        public int CourseId { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public int Duration { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public string Instructor { get; set; }
+    }
+    public class UserInfo
+    {
+        public string DisplayName { get; set; }
+        public string Email { get; set; }
+        public string Department { get; set; }
+    }
+
+    public class EnrollmentModel
+    {
+        public int EnrollmentID { get; set; }
+        public int UserID { get; set; }
+        public int CourseID { get; set; }
+        public DateTime EnrollmentDate { get; set; }
+        public DateTime? CompletionDate { get; set; }
+        public decimal? Grade { get; set; }
+    }
+    
 }

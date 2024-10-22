@@ -1,0 +1,92 @@
+﻿<Window x:Class="EducationSystem.ManageEnrollmentWindow"
+
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+
+        xmlns:local="clr-namespace:EducationSystem"
+
+        mc:Ignorable="d"
+
+        Title="Управление записью на курс" Height="400" Width="800">
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="Auto" />
+
+            <RowDefinition Height="Auto" />
+
+            <RowDefinition Height="Auto" />
+
+            <RowDefinition Height="Auto" />
+
+            <RowDefinition Height="Auto" />
+
+            <RowDefinition Height="Auto" />
+
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+
+            <ColumnDefinition Width="Auto" />
+
+            <ColumnDefinition Width="*" />
+
+        </Grid.ColumnDefinitions>
+ 
+        <Label Grid.Row="0" Grid.Column="0" Content="Пользователь:" Margin="10" />
+
+        <ComboBox x:Name="ParticipantsList" Grid.Row="0" Grid.Column="1" SelectedItem="{Binding SelectedParticipant}" Margin="10">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding DisplayName}" />
+                        <TextBlock Text="{Binding Email}" />
+                        <TextBlock Text="{Binding Department}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        
+        <Label Grid.Row="1" Grid.Column="0" Content="Курс:" Margin="10" />
+        
+        <ComboBox x:Name="CoursesList" Grid.Row="1" Grid.Column="1" SelectedItem="{Binding SelectedCourse}" Margin="10">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Title}" />
+                        <TextBlock Text="{Binding Description}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        
+        <Label Grid.Row="2" Grid.Column="0" Content="Дата записи:" Margin="10" />
+
+        <DatePicker Grid.Row="2" Grid.Column="1" SelectedDate="{Binding Enrollment.EnrollmentDate}" Margin="10" />
+
+        <Label Grid.Row="3" Grid.Column="0" Content="Дата завершения:" Margin="10" />
+
+        <DatePicker Grid.Row="3" Grid.Column="1" SelectedDate="{Binding Enrollment.CompletionDate}" Margin="10" />
+
+        <Label Grid.Row="4" Grid.Column="0" Content="Оценка:" Margin="10" />
+
+        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Enrollment.Grade}" Margin="10" />
+
+        <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+
+            <Button Content="Сохранить" Click="SaveEnrollment" Margin="0,0,10,0" />
+
+            <Button Content="Отменить" Click="CloseWindow" />
+
+        </StackPanel>
+
+    </Grid>
+
+</Window>

@@ -8,7 +8,7 @@ namespace EducationSystem;
 public partial class ManageCourseWindow : Window
 {
     private readonly CourseModel _course;
-    public ObservableCollection<UserModel> Instructors { get; set; }
+    public List<UserModel> Instructors { get; set; }
     public CourseModel Course => _course;
     
     public ManageCourseWindow(CourseModel course)
@@ -18,17 +18,22 @@ public partial class ManageCourseWindow : Window
         
         DataContext = this;
         
-        // Инициализация других данных для привязки (например, список преподавателей)
         LoadInstructors();
-        
-        var instructorsInfo = Instructors.Select(instructor => new InstructorInfo
+
+        var instructorsInfo = ConvertListToUsersInfo(Instructors??new List<UserModel>());
+            
+        InstructorsList.ItemsSource = instructorsInfo;
+    }
+    
+    public static List<UserInfo> ConvertListToUsersInfo(List<UserModel> Instructors)
+    {
+        var instructorsInfo = Instructors.Select(instructor => new UserInfo
         {
             DisplayName = $"{instructor.FirstName} {instructor.LastName}",
             Email = instructor.Email,
             Department = instructor.Department
         }).ToList();
-            
-        InstructorsList.ItemsSource = instructorsInfo;
+        return instructorsInfo;
     }
     
 private void LoadInstructors()
@@ -52,7 +57,7 @@ private void LoadInstructors()
         {
             DbHelper.SaveCourse(_course);
             MessageBox.Show("Курс успешно сохранён.");
-            Close(); // Закрытие окна после успешного сохранения
+            Close();
         }
         else
         {
@@ -93,10 +98,4 @@ private void LoadInstructors()
         Close();
     }
     
-    public class InstructorInfo
-    {
-        public string DisplayName { get; set; }
-        public string Email { get; set; }
-        public string Department { get; set; }
-    }
 }

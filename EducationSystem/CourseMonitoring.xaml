@@ -26,6 +26,8 @@
                 <Button Content="Удалить" Click="DeleteCourse" Margin="10,0,0,0" />
                 
                 <Button Content="Обновить" Click="RefreshCourse" Margin="10,0,0,0" />
+                
+                <Button Content="В главное меню" Click="ReturnToMain" Margin="300,0,0,0" HorizontalAlignment="Right"/>
 
             </StackPanel>
 
@@ -39,7 +41,7 @@
 
                     <DataGridTextColumn Header="Длительность" Binding="{Binding Duration}" />
 
-                    <DataGridTextColumn Header="Ответственный" Binding="{Binding InstructorId}" />
+                    <DataGridTextColumn Header="Ответственный" Binding="{Binding Instructor}"/>
 
                     <DataGridTextColumn Header="Создано" Binding="{Binding CreatedAt}" />
 

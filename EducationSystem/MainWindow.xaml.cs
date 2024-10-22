@@ -38,4 +38,11 @@ public partial class MainWindow : Window
         courseMonitoring.Show();
         Close();
     }
+
+    private void ButtonBase_OnClickEnr(object sender, RoutedEventArgs e)
+    {
+        EnrollmentMonitoring enrollmentMonitoring = new();
+        enrollmentMonitoring.Show();
+        Close();
+    }
 }
