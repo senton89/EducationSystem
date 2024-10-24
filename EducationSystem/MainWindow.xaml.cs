@@ -16,33 +16,8 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        
-    }
-
-
-    private void ButtonAuth_OnClick(object sender, RoutedEventArgs e)
-    {
         Authorization authorization = new Authorization();
         authorization.Show();
-    }
-
-    private void ButtonReg_OnClick(object sender, RoutedEventArgs e)
-    {
-        Registration registration = new Registration();
-        registration.Show();
-    }
-
-    private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
-    {
-        CourseMonitoring courseMonitoring = new CourseMonitoring();
-        courseMonitoring.Show();
-        Close();
-    }
-
-    private void ButtonBase_OnClickEnr(object sender, RoutedEventArgs e)
-    {
-        EnrollmentMonitoring enrollmentMonitoring = new();
-        enrollmentMonitoring.Show();
         Close();
     }
 }

@@ -74,3 +74,9 @@ C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-w
 C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\ManageEnrollmentWindow.g.cs
 C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\EnrollmentMonitoring.baml
 C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\ManageEnrollmentWindow.baml
+C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\AdministratorWindow.g.cs
+C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\InstructorWindow.g.cs
+C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\ParticipantWindow.g.cs
+C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\AdministratorWindow.baml
+C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\InstructorWindow.baml
+C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\ParticipantWindow.baml

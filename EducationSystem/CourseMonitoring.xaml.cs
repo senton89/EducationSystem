@@ -6,16 +6,18 @@ namespace EducationSystem;
 
 public partial class CourseMonitoring : Window
 {
+    private Roles userRole;
     private List<CourseModel> courses;
     private List<CourseInfo> coursesInfo = new();
     public List<UserModel> Instructors { get; }
     
-    public CourseMonitoring()
+    public CourseMonitoring(Roles role)
     {
         InitializeComponent();
         Instructors = DbHelper.GetInstructors();
         LoadCoursesInfo();
         CoursesGrid.ItemsSource = coursesInfo;
+        userRole = role;
     }
 
     private void LoadCoursesInfo()
@@ -90,8 +92,11 @@ public partial class CourseMonitoring : Window
 
     private void ReturnToMain(object sender, RoutedEventArgs e)
     {
-        MainWindow mainWindow = new MainWindow();
-        mainWindow.Show();
+        if (userRole == Roles.Administrator)
+        {
+            AdministratorWindow administratorWindow = new AdministratorWindow();
+            administratorWindow.Show();
+        }
         Close();
     }
     private UserInfo GetInstructorInfo(int instructorId)

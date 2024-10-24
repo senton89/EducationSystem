@@ -27,7 +27,9 @@
             <TextBox Name="PhoneNumberTextBox" Width="250" Margin="0,0,0,10" Padding="5" Background="#F5F5DC" BorderBrush="#9B9A5A" BorderThickness="2"/>
             <Label Content="Отдел:" VerticalAlignment="Center" Margin="70,10,0,0" FontWeight="Bold" Foreground="#9B9A5A"/>
             <TextBox Name="DepartmentTextBox" Width="250" Margin="0,0,0,20" Padding="5" Background="#F5F5DC" BorderBrush="#9B9A5A" BorderThickness="2"/>
-            <Button Content="Зарегистрироваться" Height="20" Width="150" Margin="0,0,0,0" Click="RegisterButton_Click" Background="#9B9A5A" Foreground="White" FontWeight="Bold"/>
+            <StackPanel Width="250" Margin="0 20 0 0">
+                <Button Content="Зарегистрировать" Height="30" Click="RegisterButton_Click" Background="#9B9A5A" Foreground="White" FontWeight="Bold"/>
+            </StackPanel>
         </StackPanel>
 
     </Grid>

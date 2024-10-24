@@ -11,14 +11,15 @@ namespace EducationSystem
         private static string connectionString =
             "Host=localhost; Database=corporate_training; Username=postgres; Password=postgres;";
 
-        public static bool AuthenticateUser(string username, string password, out string role)
+        public static bool AuthenticateUser(string username, string password, out Roles role,out int userID)
         {
-            role = string.Empty;
+            role = Roles.Participant;
+            userID = 0;
             using (var connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
                 // Запрос для получения пользователя по email
-                string query = "SELECT role, password_hash, salt FROM users WHERE email = @username";
+                string query = "SELECT user_id, role, password_hash, salt FROM users WHERE email = @username";
                 using (var command = new NpgsqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("username", username);
@@ -26,8 +27,9 @@ namespace EducationSystem
                     {
                         if (reader.Read()) // Если пользователь найден
                         {
-                            var storedPasswordHash = reader.GetString(1); // Получаем хэш пароля
-                            role = reader.GetString(0); // Получаем роль
+                            userID = reader.GetInt32(0); // Получаем id
+                            role = (Roles)Enum.Parse(typeof(Roles), reader.GetString(1)); // Получаем роль
+                            var storedPasswordHash = reader.GetString(2); // Получаем хэш пароля
                             byte[] salt = (byte[])reader["salt"]; // Получаем хэш для шифрования
                             // Проверяем пароль
                             if (VerifyPassword(password, storedPasswordHash, salt))
@@ -45,7 +47,8 @@ namespace EducationSystem
 
         private static bool VerifyPassword(string password, string storedHash, byte[] salt)
         {
-
+            if(storedHash==string.Empty || storedHash.Length==0)
+                return false;
             // Сравните хеши, используя тот же алгоритм хеширования
             using (var hmac = new HMACSHA256(salt))
             {
@@ -330,6 +333,19 @@ namespace EducationSystem
         {
             using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
             {
+                string checkQuery = "SELECT COUNT(*) FROM enrollments WHERE user_id = @UserID AND course_id = @CourseID";
+                using (NpgsqlCommand checkCommand = new NpgsqlCommand(checkQuery, connection))
+                {
+                    checkCommand.Parameters.AddWithValue("@UserID", enrollment.UserID);
+                    checkCommand.Parameters.AddWithValue("@CourseID", enrollment.CourseID);
+                    connection.Open();
+                    Int32.TryParse(checkCommand.ExecuteScalar().ToString(),out int count);
+                    if (count > 0)
+                    {
+                        MessageBox.Show("Запись с таким UserId и CourseId уже существует.");
+                        return;
+                    }
+                }
                 // Define the SQL command to insert or update the course
                 string query = enrollment.EnrollmentID == 0
                     ? "INSERT INTO enrollments (user_id, course_id, enrollment_date, completion_date, grade) VALUES (@UserID, @CourseID, @EnrollmentDate, @CompletionDate, @Grade)"
@@ -347,10 +363,59 @@ namespace EducationSystem
                     {
                         command.Parameters.AddWithValue("@EnrollmentID", enrollment.EnrollmentID);
                     }
-                    connection.Open();
                     command.ExecuteNonQuery();
+                    SaveRelationShip(enrollment.UserID, enrollment.CourseID, enrollment.CompletionDate <= DateTime.Now,connection);
                 }
             }
+        }
+
+        public static void SaveRelationShip(int UserID, int CourseID, bool isCompleted, NpgsqlConnection connection)
+        {
+            // Define the SQL command to insert or update the relationship
+            string query = "INSERT INTO relationship (user_id, course_id, Type) VALUES (@UserID, @CourseID, @Type)";
+
+            using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+            {
+                // Add parameters to prevent SQL injection
+                command.Parameters.AddWithValue("@UserID", UserID);
+                command.Parameters.AddWithValue("@CourseID", CourseID);
+                command.Parameters.AddWithValue("@Type", isCompleted?TypeStatement.Taught.ToString():TypeStatement.Enrolled.ToString());
+        
+                // Open connection if it's not already open
+                if (connection.State != System.Data.ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                // Execute the command to save the relationship
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public static List<RelationShip> GetRelationShips()
+        {
+            List<RelationShip> relationShips = new List<RelationShip>();
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+                using (var command = new NpgsqlCommand(
+                           "SELECT user_id, course_id, type FROM relationship",
+                           connection))
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var relationShip = new RelationShip
+                        {
+                            UserID = reader.GetInt32(0),
+                            CourseID = reader.GetInt32(1),
+                            Type = reader.GetString(2) // Предполагается, что тип - это строка
+                        };
+                        relationShips.Add(relationShip);
+                    }
+                }
+            }
+            return relationShips;
         }
     }
 
@@ -415,6 +480,19 @@ namespace EducationSystem
         public DateTime EnrollmentDate { get; set; }
         public DateTime? CompletionDate { get; set; }
         public decimal? Grade { get; set; }
+    }
+
+    public class RelationShip
+    {
+        public int UserID { get; set; }
+        public int CourseID { get; set; }
+        public string Type { get; set; }
+    }
+    public class RelationShipInfo
+    {
+        public string User { get; set; }
+        public string Course { get; set; }
+        public string Type { get; set; }
     }
     
 }
