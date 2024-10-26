@@ -1,56 +1,73 @@
 ﻿<Window x:Class="EducationSystem.CourseMonitoring"
+
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+
         xmlns:local="clr-namespace:EducationSystem"
+
         mc:Ignorable="d"
+
         Title="Управление учебными программами" Height="450" Width="800">
+    <Grid>
 
-        <Grid>
+        <Grid.RowDefinitions>
 
-            <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            
+            <RowDefinition Height="40" />
 
-                <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
 
-                <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-            </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Margin="10 10 10 0">
 
-            <StackPanel Orientation="Horizontal" Margin="10">
+            <Button Content="Создать программу" Click="CreateCourse" />
 
-                <Button Content="Создать программу" Click="CreateCourse" />
+            <Button Content="Редактировать" Click="EditCourse" />
 
-                <Button Content="Редактировать" Click="EditCourse" Margin="10,0,0,0" />
+            <Button Content="Удалить" Click="DeleteCourse" />
 
-                <Button Content="Удалить" Click="DeleteCourse" Margin="10,0,0,0" />
-                
-                <Button Content="Обновить" Click="RefreshCourse" Margin="10,0,0,0" />
-                
-                <Button Content="В главное меню" Click="ReturnToMain" Margin="300,0,0,0" HorizontalAlignment="Right"/>
+            <Button Content="Обновить" Click="RefreshCourse" />
 
-            </StackPanel>
+            <Button Content="В главное меню" Click="ReturnToMain" HorizontalAlignment="Right"/>
+            
+        </StackPanel>
+        
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10 0 0 0">
 
-            <DataGrid x:Name="CoursesGrid" IsReadOnly="True" Grid.Row="1" AutoGenerateColumns="False" SelectedItem="{Binding SelectedCourse}">
+            <TextBox x:Name="SearchTextBox" Width="200" Margin="5" ToolTip="Введите текст для поиска..." />
 
-                <DataGrid.Columns>
+            <Button Content="Поиск" Click="SearchCourses" Margin="0 5 0 5" />
 
-                    <DataGridTextColumn Header="Название" Binding="{Binding Title}" />
+        </StackPanel>
+        
+        <DataGrid x:Name="CoursesGrid" IsReadOnly="True" Grid.Row="2" AutoGenerateColumns="False" SelectedItem="{Binding SelectedCourse}">
 
-                    <DataGridTextColumn Header="Описание" Binding="{Binding Description}" />
+            <DataGrid.Columns>
 
-                    <DataGridTextColumn Header="Длительность" Binding="{Binding Duration}" />
+                <DataGridTextColumn Header="Название" Binding="{Binding Title}" />
 
-                    <DataGridTextColumn Header="Ответственный" Binding="{Binding Instructor}"/>
+                <DataGridTextColumn Header="Описание" Binding="{Binding Description}" />
 
-                    <DataGridTextColumn Header="Создано" Binding="{Binding CreatedAt}" />
+                <DataGridTextColumn Header="Длительность" Binding="{Binding Duration}" />
 
-                    <DataGridTextColumn Header="Обновлено" Binding="{Binding UpdatedAt}" />
+                <DataGridTextColumn Header="Ответственный" Binding="{Binding Instructor}"/>
 
-                </DataGrid.Columns>
+                <DataGridTextColumn Header="Создано" Binding="{Binding CreatedAt}" />
 
-            </DataGrid>
+                <DataGridTextColumn Header="Обновлено" Binding="{Binding UpdatedAt}" />
 
-        </Grid>
+            </DataGrid.Columns>
 
-    </Window>
+        </DataGrid>
+
+    </Grid>
+
+</Window>
+

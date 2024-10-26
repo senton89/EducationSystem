@@ -9,16 +9,21 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="10">
-            <Button Content="Создать запись" Click="CreateEnrollment" />
+            <Button Content="Создать запись" Click="CreateEnrollment" Margin="0,0,0,0" />
             <Button Content="Редактировать" Click="EditEnrollment" Margin="10,0,0,0" />
             <Button Content="Удалить" Click="DeleteEnrollment" Margin="10,0,0,0" />
             <Button Content="Обновить" Click="RefreshEnrollments" Margin="10,0,0,0" />
-            <Button Content="В главное меню" Click="ReturnToMain" Margin="300,0,0,0" HorizontalAlignment="Right" />
+            <Button Content="В главное меню" Click="ReturnToMain" Margin="200,0,0,0" HorizontalAlignment="Right" />
         </StackPanel>
-        <DataGrid x:Name="EnrollmentsGrid" IsReadOnly="True" Grid.Row="1" AutoGenerateColumns="False" SelectedItem="{Binding SelectedEnrollment}">
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10 0 0 0">
+            <TextBox x:Name="SearchTextBox" Width="200" Margin="5" ToolTip="Введите текст для поиска..." />
+            <Button Content="Поиск" Click="SearchEnrollments" Margin="0 5 0 5" />
+        </StackPanel>
+        <DataGrid x:Name="EnrollmentsGrid" IsReadOnly="True" Grid.Row="2" AutoGenerateColumns="False" SelectedItem="{Binding SelectedEnrollment}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Пользователь" Binding="{Binding Participant}" />
                 <DataGridTextColumn Header="Курс" Binding="{Binding Course}" />

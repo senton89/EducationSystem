@@ -6,24 +6,32 @@ namespace EducationSystem;
 
 public partial class CourseMonitoring : Window
 {
+    private int userId;
     private Roles userRole;
     private List<CourseModel> courses;
     private List<CourseInfo> coursesInfo = new();
     public List<UserModel> Instructors { get; }
     
-    public CourseMonitoring(Roles role)
+    public CourseMonitoring(Roles role, int userID)
     {
         InitializeComponent();
         Instructors = DbHelper.GetInstructors();
         LoadCoursesInfo();
         CoursesGrid.ItemsSource = coursesInfo;
         userRole = role;
+        userId = userID;
     }
 
     private void LoadCoursesInfo()
     {
         courses = DbHelper.GetCourses();
         coursesInfo.Clear();
+        coursesInfo = GetCourseInfo(courses);
+    }
+
+    private List<CourseInfo> GetCourseInfo(List<CourseModel> courses)
+    {
+        List<CourseInfo> coursesInfo = new();
         foreach (CourseModel course in courses)
         {
             var instructorInfo = GetInstructorInfo(course.InstructorId);
@@ -39,11 +47,12 @@ public partial class CourseMonitoring : Window
             };
             coursesInfo.Add(courseInfo);
         }
+        return coursesInfo;
     }
 
     private void CreateCourse(object sender, RoutedEventArgs e)
     {
-        ManageCourseWindow createCourseWindow = new ManageCourseWindow(new CourseModel());
+        ManageCourseWindow createCourseWindow = new ManageCourseWindow(new CourseModel(), userRole);
         createCourseWindow.Show();
     }
 
@@ -86,19 +95,32 @@ public partial class CourseMonitoring : Window
 
     private void UpdateCourse(CourseModel course)
     {
-        ManageCourseWindow manageCourseWindow = new ManageCourseWindow(course);
+        ManageCourseWindow manageCourseWindow = new ManageCourseWindow(course,userRole);
         manageCourseWindow.Show();
     }
 
     private void ReturnToMain(object sender, RoutedEventArgs e)
     {
-        if (userRole == Roles.Administrator)
-        {
-            AdministratorWindow administratorWindow = new AdministratorWindow();
-            administratorWindow.Show();
-        }
-        Close();
+        ReturnToMain();
     }
+    
+    private void ReturnToMain()
+    {
+        switch (userRole)
+        {
+            case Roles.Instructor:
+                InstructorWindow instructorWindow = new InstructorWindow(userId);
+                instructorWindow.Show();
+                Close();
+                return;
+            case Roles.Administrator:
+                AdministratorWindow adminWindow = new AdministratorWindow();
+                adminWindow.Show();
+                Close();
+                return;
+        }
+    }
+
     private UserInfo GetInstructorInfo(int instructorId)
     {
         var instructor = Instructors.First(instructor => instructor.UserID == instructorId);
@@ -108,5 +130,18 @@ public partial class CourseMonitoring : Window
             Email = instructor.Email,
             Department = instructor.Department
         };
+    }
+    
+    private void SearchCourses(object sender, RoutedEventArgs e)
+    {
+        string searchText = SearchTextBox.Text.ToLower();
+        var filteredCourses = courses.Where(course =>
+            course.Title.ToLower().Contains(searchText) ||
+            course.Description.ToLower().Contains(searchText) ||
+            (Instructors.First(instructor => instructor.UserID == course.InstructorId)
+                .FirstName + " " + 
+            Instructors.First(instructor => instructor.UserID == course.InstructorId)
+                .LastName).Contains(searchText)).ToList();
+        CoursesGrid.ItemsSource = GetCourseInfo(filteredCourses);
     }
 }

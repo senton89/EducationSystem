@@ -1,0 +1,110 @@
+﻿<ResourceDictionary x:Name="ResourceDictionary" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        
+    <Style TargetType="Window">
+            <Setter Property="Background" Value="#F5F5BC"/>
+        </Style>    
+    
+    <!-- Стиль для кнопок -->
+        
+        <Style TargetType="Button">
+
+            <Setter Property="Background" Value="#9B9A5A"/> <!-- Оливковый цвет -->
+
+            <Setter Property="Foreground" Value="White"/>
+
+            <Setter Property="Margin" Value="5"/>
+
+            <Setter Property="Padding" Value="10,5"/>
+
+            <Setter Property="BorderBrush" Value="#6B8E23"/>
+
+            <Setter Property="BorderThickness" Value="1"/>
+
+            <Setter Property="FontSize" Value="14"/>
+
+            <Setter Property="Cursor" Value="Hand"/>
+            
+        </Style>
+
+        <!-- Стиль для DataGrid -->
+        
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#9B9A5A"></Setter>
+            
+            <Setter Property="Foreground" Value="White"></Setter>
+            
+            <Setter Property="Padding" Value="8"></Setter>
+            
+            <Setter Property="BorderBrush" Value="#6B8E23"></Setter>
+        </Style>
+
+        <Style TargetType="DataGrid">
+
+            <Setter Property="Background" Value="#F5F5DC"/>
+
+            <Setter Property="AlternatingRowBackground" Value="#F5F5BE"/> <!-- Светлый оливковый для четных строк -->
+
+            <Setter Property="RowHeight" Value="30"/>
+
+            <Setter Property="FontSize" Value="14"/>
+
+            <Setter Property="BorderBrush" Value="#9B9A5A"/>
+
+            <Setter Property="BorderThickness" Value="1"/>
+
+        </Style>
+    
+    <Style TargetType="TextBox">
+
+        <Setter Property="Background" Value="#F5F5BE"/>
+
+        <Setter Property="BorderBrush" Value="#8FBC8F"/>
+
+        <Setter Property="BorderThickness" Value="1"/>
+
+        <Setter Property="Margin" Value="10"/>
+
+        <Setter Property="Padding" Value="5"/>
+
+        <Setter Property="FontSize" Value="14"/>
+
+    </Style>
+    
+    <Style TargetType="ComboBoxItem">
+        <Setter Property="Background" Value="#F5F5BE"/>
+        
+        <Setter Property="BorderBrush" Value="Beige"></Setter>
+    </Style> 
+    
+    <Style TargetType="ComboBox">
+        
+        <Setter Property="Background" Value="#F5F5BE"/>
+        
+        <Setter Property="BorderBrush" Value="#8FBC8F"/>
+
+        <Setter Property="BorderThickness" Value="1"/>
+
+        <Setter Property="Margin" Value="10"/>
+
+        <Setter Property="Padding" Value="5"/>
+
+        <Setter Property="FontSize" Value="14"/>
+
+    </Style>
+    
+    <Style TargetType="DatePicker">
+        <Setter Property="Background" Value="#F5F5BE"/>
+        
+        <Setter Property="BorderBrush" Value="#8FBC8F"/>
+
+        <Setter Property="BorderThickness" Value="1"/>
+
+        <Setter Property="Margin" Value="10"/>
+
+        <Setter Property="Padding" Value="5"/>
+
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+</ResourceDictionary>

@@ -24,7 +24,7 @@ namespace EducationSystem
                         Close();
                         return;
                     case Roles.Instructor:
-                        InstructorWindow instructorWindow = new InstructorWindow();
+                        InstructorWindow instructorWindow = new InstructorWindow(userID);
                         instructorWindow.Show();
                         Close();
                         return;

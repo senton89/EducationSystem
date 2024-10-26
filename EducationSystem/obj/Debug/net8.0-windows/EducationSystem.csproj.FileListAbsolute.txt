@@ -80,3 +80,9 @@ C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-w
 C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\AdministratorWindow.baml
 C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\InstructorWindow.baml
 C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\ParticipantWindow.baml
+C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\Resourses.baml
+C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\App.baml
+C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\ReportMonitoring.g.cs
+C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\ReportMonitoring.baml
+C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\VIewMaterials.g.cs
+C:\Users\Rodion\RiderProjects\EducationSystem\EducationSystem\obj\Debug\net8.0-windows\VIewMaterials.baml

@@ -5,15 +5,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:EducationSystem"
         mc:Ignorable="d"
-        Title="Администратор" Height="300" Width="400"
+        Title="Администратор" Height="500" Width="400" ResizeMode="NoResize"
         Background="#F5F5DC">
 
             <Grid>
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20">
-                    <Button Content="Управление курсами" Width="200" Height="50" Background="#9B9A5A" Click="CourseManage" Foreground="White" Margin="10"/>
-                    <Button Content="Управление записями" Width="200" Height="50" Background="#9B9A5A" Click="EnrollmentManage" Foreground="White" Margin="10"/>
-                    <Button Content="Создание отчёта" Width="200" Height="50" Background="#9B9A5A" Foreground="White" Margin="10"/>
-                    <Button Content="Зарегистрировать пользователя" Width="200" Height="50" Click="RegistrationButtonClick" Background="#9B9A5A" Foreground="White"/>
+                    <Button Content="Управление курсами" Width="250" Height="50" Background="#9B9A5A" Click="CourseManage" Foreground="White" Margin="10"/>
+                    <Button Content="Управление записями" Width="250" Height="50" Background="#9B9A5A" Click="EnrollmentManage" Foreground="White" Margin="10"/>
+                    <Button Content="Создание отчёта" Width="250" Height="50" Background="#9B9A5A" Click="CreateReport" Foreground="White" Margin="10"/>
+                    <Button Content="Зарегистрировать пользователя" Width="250" Height="50" Click="RegistrationButtonClick" Background="#9B9A5A" Foreground="White" Margin="10"/>
+                    <Button Content="Посмотреть все материалы" Width="250" Height="50" Click="ViewMaterials" Background="#9B9A5A" Foreground="White" Margin="10"/>
                 </StackPanel>
     </Grid>
 </Window>

@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:EducationSystem"
         mc:Ignorable="d"
-        Title="Управление курсом" Height="300" Width="800">
+        Title="Управление курсом" Height="400" Width="800">
 
     <Grid>
 
@@ -61,7 +61,7 @@
 
             <Button Content="Сохранить" Click="SaveCourse" Margin="0,0,10,0" />
 
-            <Button Content="Отменить" Click="CloseWindow"/>
+            <Button Content="Назад" Click="CloseWindow" Margin="0,0,10,0" />
 
         </StackPanel>
 

@@ -8,7 +8,6 @@ namespace EducationSystem
 {
     public partial class EnrollmentMonitoring : Window
     {
-        //TODO: курсы для пользователей(форма со списком), добавление и изменение только для админов, поиск по таблицам
         private List<EnrollmentModel> enrollments { get; set; }
         private List<EnrollmentInfo> EnrollmentsInfos { get; set; }
         public List<UserModel> Participants { get; set; }
@@ -56,7 +55,7 @@ namespace EducationSystem
         {
             if (EnrollmentsGrid.SelectedItem == null)
             {
-                MessageBox.Show("Please choose an enrollment");
+                MessageBox.Show("Пожалуйста выберите запись");
                 return;
             }
 
@@ -78,12 +77,12 @@ namespace EducationSystem
         {
             if (EnrollmentsGrid.SelectedItem != null)
             {
-                var selectedEnrollment = (EnrollmentModel)EnrollmentsGrid.SelectedItem;
+                var selectedEnrollment = (EnrollmentInfo)EnrollmentsGrid.SelectedItem;
                 DbHelper.DeleteEnrollment(selectedEnrollment.EnrollmentID);
             }
             else
             {
-                MessageBox.Show("Please choose an enrollment");
+                MessageBox.Show("Пожалуйста выберите запись");
             }
             RefreshEnrollments();
         }
@@ -104,9 +103,20 @@ namespace EducationSystem
         }
         private void ReturnToMain(object sender, RoutedEventArgs e)
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
+            AdministratorWindow administratorWindow = new();
+            administratorWindow.Show();
             Close();
         }
+        
+        private void SearchEnrollments(object sender, RoutedEventArgs e)
+        {
+            string searchText = SearchTextBox.Text.ToLower();
+            var filteredEnrollments = EnrollmentsInfos.Where(enrollment =>
+                enrollment.Participant.ToLower().Contains(searchText) ||
+                enrollment.Course.ToLower().Contains(searchText) ||
+                enrollment.Grade.ToString().Contains(searchText)).ToList();
+            EnrollmentsGrid.ItemsSource = filteredEnrollments;
+        }
+
     }
 }

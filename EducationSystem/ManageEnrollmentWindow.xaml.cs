@@ -17,13 +17,22 @@ namespace EducationSystem
         {
             InitializeComponent();
             _enrollment = enrollment;
-            _enrollment.EnrollmentDate = DateTime.Now;
+            _enrollment.EnrollmentDate = enrollment.EnrollmentDate==DateTime.MinValue ? DateTime.Now : enrollment.EnrollmentDate;
+            _enrollment.CompletionDate = DateTime.Now;
             DataContext = this;
             LoadUsers();
             LoadCourses();
             LoadParticipants();
-            ParticipantsList.ItemsSource = ConvertListToUsersInfo(Participants);
-            CoursesList.ItemsSource = Courses;
+            if (enrollment.EnrollmentID == null)
+            {
+                ParticipantsList.ItemsSource = ConvertListToUsersInfo(Participants);
+                CoursesList.ItemsSource = Courses;
+            }
+            else
+            {
+                ParticipantsList.ItemsSource = ConvertListToUsersInfo(Participants).Where(participant => participant.UserId == enrollment.UserID);
+                CoursesList.ItemsSource = Courses.Where(course => course.CourseId == enrollment.CourseID);
+            }
         }
         
         public static List<UserInfo> ConvertListToUsersInfo(List<UserModel> Users)
@@ -60,12 +69,12 @@ namespace EducationSystem
             if (ValidateEnrollment())
             {
                 DbHelper.SaveEnrollment(_enrollment);
-                MessageBox.Show("Enrollment saved successfully.");
+                MessageBox.Show("Запись успешно сохранена");
                 Close();
             }
             else
             {
-                MessageBox.Show("Please fix the errors.");
+                MessageBox.Show("Пожалуйста исправьте ошибки");
             }
         }
 
@@ -74,44 +83,40 @@ namespace EducationSystem
             // Validate user ID
             if (ParticipantsList.SelectedIndex<0)
             {
-                MessageBox.Show("Please select at least one participant.");
+                MessageBox.Show("Пожалуйста выберите обучающегося");
                 return false;
             }
 
             // Validate course ID
             if (CoursesList.SelectedIndex<0)
             {
-                MessageBox.Show("Please select at least one course.");
+                MessageBox.Show("Пожалуйста выберите курс");
                 return false;
             }
 
             // Validate enrollment date
             if (Enrollment.EnrollmentDate == DateTime.MinValue)
             {
-                MessageBox.Show("Enrollment date is required.");
+                MessageBox.Show("Выберите дату записи");
                 return false;
             }
 
             // Validate completion date
             if (Enrollment.CompletionDate < Enrollment.EnrollmentDate)
             {
-                MessageBox.Show("Completion date must be later than enrollment date.");
+                MessageBox.Show("Дата завершения должна быть не ранее даты зачисления");
                 return false;
             }
 
-            if (!Enrollment.Grade.HasValue)
+            if (Enrollment.Grade.HasValue)
             {
-                MessageBox.Show("Grade is required.");
-                return false;
+                if (Enrollment.Grade < 2 || Enrollment.Grade > 5)
+                {
+                    MessageBox.Show("Оценка должна быть в диапазоне от 2 до 5");
+                    return false;
+                }
             }
-
-            // Validate grade
-            if (Enrollment.Grade < 2 || Enrollment.Grade > 5)
-            {
-                MessageBox.Show("Grade must be between 2 and 5.");
-                return false;
-            }
-
+            
             return true;
         }
 

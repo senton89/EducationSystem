@@ -11,7 +11,7 @@ namespace EducationSystem
         private static string connectionString =
             "Host=localhost; Database=corporate_training; Username=postgres; Password=postgres;";
 
-        public static bool AuthenticateUser(string username, string password, out Roles role,out int userID)
+        public static bool AuthenticateUser(string username, string password, out Roles role, out int userID)
         {
             role = Roles.Participant;
             userID = 0;
@@ -47,7 +47,7 @@ namespace EducationSystem
 
         private static bool VerifyPassword(string password, string storedHash, byte[] salt)
         {
-            if(storedHash==string.Empty || storedHash.Length==0)
+            if (storedHash == string.Empty || storedHash.Length == 0)
                 return false;
             // Сравните хеши, используя тот же алгоритм хеширования
             using (var hmac = new HMACSHA256(salt))
@@ -162,7 +162,6 @@ namespace EducationSystem
                             PhoneNumber = reader.IsDBNull(5) ? null : reader.GetString(4),
                             Department = reader.IsDBNull(6) ? null : reader.GetString(5)
                         };
-
                         users.Add(user);
                     }
                 }
@@ -205,11 +204,8 @@ namespace EducationSystem
 
                     connection.Open();
                     command.ExecuteNonQuery();
-
                 }
-
             }
-
         }
 
         public static List<CourseModel> GetCourses()
@@ -299,6 +295,13 @@ namespace EducationSystem
             return enrollments;
         }
 
+        public static List<EnrollmentModel> GetEnrollmentsByCourse(int courseId)
+        {
+            List<EnrollmentModel> enrollments = new List<EnrollmentModel>();
+            enrollments = GetEnrollments().Where(e => e.CourseID == courseId).ToList();
+            return enrollments;
+        }
+
         public static void DeleteEnrollment(int enrollmentId)
         {
             string query = "DELETE FROM enrollments WHERE enrollment_id = @EnrollmentID";
@@ -314,11 +317,11 @@ namespace EducationSystem
                         int rowsAffected = command.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
-                            MessageBox.Show("Enrollment deleted successfully.");
+                            MessageBox.Show("Запись удалена успешно");
                         }
                         else
                         {
-                            MessageBox.Show("Enrollment not found.");
+                            MessageBox.Show("Запись не найдена");
                         }
                     }
                     catch (Exception ex)
@@ -333,20 +336,27 @@ namespace EducationSystem
         {
             using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
             {
-                string checkQuery = "SELECT COUNT(*) FROM enrollments WHERE user_id = @UserID AND course_id = @CourseID";
-                using (NpgsqlCommand checkCommand = new NpgsqlCommand(checkQuery, connection))
+                if (enrollment.EnrollmentID == 0)
                 {
-                    checkCommand.Parameters.AddWithValue("@UserID", enrollment.UserID);
-                    checkCommand.Parameters.AddWithValue("@CourseID", enrollment.CourseID);
-                    connection.Open();
-                    Int32.TryParse(checkCommand.ExecuteScalar().ToString(),out int count);
-                    if (count > 0)
+                    string checkQuery =
+                        "SELECT COUNT(*) FROM enrollments WHERE user_id = @UserID AND course_id = @CourseID";
+                    using (NpgsqlCommand checkCommand = new NpgsqlCommand(checkQuery, connection))
                     {
-                        MessageBox.Show("Запись с таким UserId и CourseId уже существует.");
-                        return;
+                        checkCommand.Parameters.AddWithValue("@UserID", enrollment.UserID);
+                        checkCommand.Parameters.AddWithValue("@CourseID", enrollment.CourseID);
+                        connection.Open();
+                        Int32.TryParse(checkCommand.ExecuteScalar().ToString(), out int count);
+                        if (count > 0)
+                        {
+                            MessageBox.Show("Запись с таким пользователем и курсом уже существует.");
+                            return;
+                        }
                     }
+                    connection.Close();
                 }
+
                 // Define the SQL command to insert or update the course
+                connection.Open();
                 string query = enrollment.EnrollmentID == 0
                     ? "INSERT INTO enrollments (user_id, course_id, enrollment_date, completion_date, grade) VALUES (@UserID, @CourseID, @EnrollmentDate, @CompletionDate, @Grade)"
                     : "UPDATE enrollments SET user_id = @UserID, course_id = @CourseID, enrollment_date = @EnrollmentDate, completion_date = @CompletionDate, grade = @Grade WHERE enrollment_id = @EnrollmentID"; // Update case
@@ -363,8 +373,10 @@ namespace EducationSystem
                     {
                         command.Parameters.AddWithValue("@EnrollmentID", enrollment.EnrollmentID);
                     }
+                    
                     command.ExecuteNonQuery();
-                    SaveRelationShip(enrollment.UserID, enrollment.CourseID, enrollment.CompletionDate <= DateTime.Now,connection);
+                    SaveRelationShip(enrollment.UserID, enrollment.CourseID, enrollment.CompletionDate <= DateTime.Now,
+                        connection);
                 }
             }
         }
@@ -379,8 +391,9 @@ namespace EducationSystem
                 // Add parameters to prevent SQL injection
                 command.Parameters.AddWithValue("@UserID", UserID);
                 command.Parameters.AddWithValue("@CourseID", CourseID);
-                command.Parameters.AddWithValue("@Type", isCompleted?TypeStatement.Taught.ToString():TypeStatement.Enrolled.ToString());
-        
+                command.Parameters.AddWithValue("@Type",
+                    isCompleted ? TypeStatement.Taught.ToString() : TypeStatement.Enrolled.ToString());
+
                 // Open connection if it's not already open
                 if (connection.State != System.Data.ConnectionState.Open)
                 {
@@ -391,31 +404,158 @@ namespace EducationSystem
                 command.ExecuteNonQuery();
             }
         }
-
-        public static List<RelationShip> GetRelationShips()
+        
+        public static List<ReportModel> GetReports()
         {
-            List<RelationShip> relationShips = new List<RelationShip>();
-            using (var connection = new NpgsqlConnection(connectionString))
+            List<ReportModel> reports = new List<ReportModel>();
+            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
-                using (var command = new NpgsqlCommand(
-                           "SELECT user_id, course_id, type FROM relationship",
-                           connection))
-                using (var reader = command.ExecuteReader())
+                string query = "SELECT report_id, course_id, total_hours, avg_grade, completion_rate, generated_at FROM reports";
+                using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
                 {
-                    while (reader.Read())
+                    using (NpgsqlDataReader reader = command.ExecuteReader())
                     {
-                        var relationShip = new RelationShip
+                        while (reader.Read())
                         {
-                            UserID = reader.GetInt32(0),
-                            CourseID = reader.GetInt32(1),
-                            Type = reader.GetString(2) // Предполагается, что тип - это строка
-                        };
-                        relationShips.Add(relationShip);
+                            ReportModel report = new ReportModel
+                            {
+                                ReportID = reader.GetInt32(0), // report_id
+                                CourseID = reader.GetInt32(1),  // course_id
+                                TotalHours = reader.GetDecimal(2), // total_hours
+                                AvgGrade = reader.GetDecimal(3),    // avg_grade
+                                CompletionRate = reader.GetDecimal(4) // completion_rate
+                            };
+                            reports.Add(report);
+                        }
                     }
                 }
             }
-            return relationShips;
+            return reports;
+        }
+
+        public static void SaveReport(ReportModel report)
+        {
+            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+            {
+                // Проверка на существование отчета
+                string checkQuery = "SELECT COUNT(*) FROM reports WHERE course_id = @CourseID";
+                using (NpgsqlCommand checkCommand = new NpgsqlCommand(checkQuery, connection))
+                {
+                    checkCommand.Parameters.AddWithValue("@CourseID", report.CourseID);
+                   
+                    connection.Open();
+                    
+                    Int32.TryParse(checkCommand.ExecuteScalar().ToString(), out int count);
+                    if (count > 0)
+                    {
+                        MessageBox.Show("Отчет по этому курсу уже существует.");
+                        return;
+                    }
+                }
+                // Определяем SQL-команду для вставки или обновления отчета
+                string query =
+                    "INSERT INTO reports (course_id, total_hours, avg_grade, completion_rate) VALUES (@CourseID, @TotalHours, @AvgGrade, @CompletionRate)";
+                using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+                {
+                    // Добавляем параметры для предотвращения SQL-инъекций
+                    command.Parameters.AddWithValue("@CourseID", report.CourseID);
+                    command.Parameters.AddWithValue("@TotalHours", report.TotalHours);
+                    command.Parameters.AddWithValue("@AvgGrade", report.AvgGrade);
+                    command.Parameters.AddWithValue("@CompletionRate", report.CompletionRate);
+
+                    command.ExecuteNonQuery();
+
+                    MessageBox.Show("Отчет создан");
+                }
+            }
+        }
+
+        public static void DeleteReport(int reportID)
+        {
+            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = "DELETE FROM reports WHERE report_id = @ReportID";
+                using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@ReportID", reportID);
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected == 0)
+                        MessageBox.Show("Отчет не найден или уже удален.");
+                }
+            }
+            MessageBox.Show("Отчет удален");
+        }
+
+        public static void AddMaterialToDatabase(string fileName,int courseId)
+        {
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+                string checkQuery = "SELECT COUNT(*) FROM materials WHERE course_id = @CourseID AND material_name = @MaterialName";
+                using (NpgsqlCommand checkCommand = new NpgsqlCommand(checkQuery, connection))
+                {
+                    checkCommand.Parameters.AddWithValue("@CourseID", courseId);
+                    checkCommand.Parameters.AddWithValue("@MaterialName", fileName);
+                    
+                    Int32.TryParse(checkCommand.ExecuteScalar().ToString(), out int count);
+                    if (count > 0)
+                    {
+                        MessageBox.Show("Такой материал уже существует.");
+                        return;
+                    }
+                }
+                using (var command = new NpgsqlCommand("INSERT INTO materials (material_name,course_id) VALUES (@material_name,@course_id)", connection))
+                {
+                    command.Parameters.AddWithValue("material_name", fileName);
+                    command.Parameters.AddWithValue("course_id", courseId);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public static List<MaterialModel> GetMaterialsByCourse(int courseId)
+        {
+            var materials = new List<MaterialModel>();
+
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+                string checkQuery = "SELECT COUNT(*) FROM materials WHERE course_id = @CourseID";
+                using (NpgsqlCommand checkCommand = new NpgsqlCommand(checkQuery, connection))
+                {
+                    checkCommand.Parameters.AddWithValue("@CourseID", courseId);
+                    
+                    Int32.TryParse(checkCommand.ExecuteScalar().ToString(), out int count);
+                    if (count == 0)
+                    {
+                        MessageBox.Show("Материалов по этому курсу нет");
+                        return materials;
+                    }
+                }
+                using (var command =
+                       new NpgsqlCommand(
+                           "SELECT material_id, material_name FROM materials WHERE course_id = @course_id", connection))
+
+                {
+                    command.Parameters.AddWithValue("course_id", courseId);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var material = new MaterialModel
+                            {
+                                MaterialID = reader.GetInt32(0),
+                                MaterialName = reader.GetString(1)
+                            };
+                            materials.Add(material);
+                        }
+                    }
+                }
+            }
+            return materials;
         }
     }
 
@@ -450,7 +590,7 @@ namespace EducationSystem
         public int Duration { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public string Instructor { get; set; }
+        public string? Instructor { get; set; }
     }
     public class UserInfo
     {
@@ -481,18 +621,29 @@ namespace EducationSystem
         public DateTime? CompletionDate { get; set; }
         public decimal? Grade { get; set; }
     }
-
-    public class RelationShip
+    
+    public class ReportModel
     {
-        public int UserID { get; set; }
+        public int ReportID { get; set; }
         public int CourseID { get; set; }
-        public string Type { get; set; }
-    }
-    public class RelationShipInfo
-    {
-        public string User { get; set; }
-        public string Course { get; set; }
-        public string Type { get; set; }
+        public decimal TotalHours { get; set; }
+        public decimal? AvgGrade { get; set; }
+        public decimal CompletionRate { get; set; }
     }
     
+    public class ReportInfo
+    {
+        public int ReportID { get; set; }
+        public string Course { get; set; }
+        public decimal TotalHours { get; set; }
+        public decimal AvgGrade { get; set; }
+        public decimal CompletionRate { get; set; }
+    }
+
+    public class MaterialModel
+    {
+        public int MaterialID { get; set; }
+        public string MaterialName { get; set; }
+        public int CourseID { get; set; }
+    }
 }

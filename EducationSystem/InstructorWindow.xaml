@@ -5,8 +5,37 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:EducationSystem"
         mc:Ignorable="d"
-        Title="InstructorWindow" Height="450" Width="800">
+        Title="InstructorWindow" Width="1920" Height="1080"
+        Background="#F5F5BC"
+        WindowState="Maximized">
     <Grid>
+        <DataGrid x:Name="CoursesGrid" HorizontalAlignment="Left" Width="1000" IsReadOnly="True" AutoGenerateColumns="False" SelectedItem="{Binding SelectedCourse}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Название" Binding="{Binding Title}" />
+                <DataGridTextColumn Header="Описание" Binding="{Binding Description}" />
+                <DataGridTextColumn Header="Длительность" Binding="{Binding Duration}" />
+                <DataGridTextColumn Header="Создано" Binding="{Binding CreatedAt}" />
+                <DataGridTextColumn Header="Обновлено" Binding="{Binding UpdatedAt}" />
+            </DataGrid.Columns>
+        </DataGrid>
         
+        <DataGrid x:Name="MaterialsGrid" Width="400" Height="500" HorizontalAlignment="Right" VerticalAlignment="Top"
+                  IsReadOnly="True" AutoGenerateColumns="False" 
+                  SelectedItem="{Binding SelectedMaterial}" Margin="50"
+                  MouseDoubleClick="MaterialDoubleClick">
+
+            <DataGrid.Columns>
+
+                <DataGridTextColumn Header="Название материала" Binding="{Binding MaterialName}"/>
+
+            </DataGrid.Columns>
+
+        </DataGrid>
+        
+        <Button Width="220" Content="Посмотреть материалы курса" Click="View_Materials" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="20 20 20 120"/>
+        
+        <Button Width="220" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="20" Content="Загрузить файлы" Click="UploadFilesButton_Click"/>
+        
+        <Button Width="220" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="20 20 20 70" Content="Создать курс" Click="CreateCourse"/>
     </Grid>
 </Window>

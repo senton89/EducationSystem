@@ -73,7 +73,7 @@
 
         <Label Grid.Row="3" Grid.Column="0" Content="Дата завершения:" Margin="10" />
 
-        <DatePicker Grid.Row="3" Grid.Column="1" SelectedDate="{Binding Enrollment.CompletionDate}" Margin="10" />
+        <DatePicker x:Name="CompetitionDate" Grid.Row="3" Grid.Column="1" SelectedDate="{Binding Enrollment.CompletionDate}" Margin="10" />
 
         <Label Grid.Row="4" Grid.Column="0" Content="Оценка:" Margin="10" />
 
@@ -83,7 +83,7 @@
 
             <Button Content="Сохранить" Click="SaveEnrollment" Margin="0,0,10,0" />
 
-            <Button Content="Отменить" Click="CloseWindow" />
+            <Button Content="Отменить" Click="CloseWindow" Margin="0,0,10,0" />
 
         </StackPanel>
 

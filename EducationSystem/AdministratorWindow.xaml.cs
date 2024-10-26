@@ -13,12 +13,11 @@ public partial class AdministratorWindow : Window
     {
         Registration registration = new Registration();
         registration.Show();
-        Close();
     }
 
     private void CourseManage(object sender, RoutedEventArgs e)
     {
-        CourseMonitoring courseMonitoring = new(Roles.Administrator);
+        CourseMonitoring courseMonitoring = new(Roles.Administrator, 0);
         courseMonitoring.Show();
         Close();    
     }
@@ -27,6 +26,20 @@ public partial class AdministratorWindow : Window
     {
         EnrollmentMonitoring enrollmentMonitoring = new();
         enrollmentMonitoring.Show();
+        Close();
+    }
+
+    private void CreateReport(object sender, RoutedEventArgs e)
+    {
+        ReportMonitoring reportMonitoring = new();
+        reportMonitoring.Show();
+        Close();
+    }
+
+    private void ViewMaterials(object sender, RoutedEventArgs e)
+    {
+        ViewMaterials viewMaterials = new();
+        viewMaterials.Show();
         Close();
     }
 }
